@@ -1,0 +1,67 @@
+@model BusBookingSystem.Models.Booking
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 p-4 mb-4">
+                <h3 class="fw-bold mb-3">Trip details</h3>
+                <div class="d-flex justify-content-between small mb-2">
+                    <span>Route</span>
+                    <strong>@Model.Trip.Route.FromCity → @Model.Trip.Route.ToCity</strong>
+                </div>
+                <div class="d-flex justify-content-between small mb-2">
+                    <span>Departure</span>
+                    <strong>@Model.Trip.DepartureTime • @Model.Trip.DepartureDate.ToString("dd/MM/yyyy")</strong>
+                </div>
+                <div class="d-flex justify-content-between small mb-2">
+                    <span>Seat</span>
+                    <strong class="text-danger">@Model.SeatCode</strong>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 p-4">
+                <h3 class="fw-bold mb-3">Payment method</h3>
+                <form method="post" asp-controller="Booking" asp-action="ConfirmPayment">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="list-group">
+                        <label class="list-group-item">
+                            <input type="radio" name="paymentMethod" value="Credit Card" checked class="form-check-input me-2" />
+                            Credit Card
+                        </label>
+                        <label class="list-group-item">
+                            <input type="radio" name="paymentMethod" value="Bank Transfer" class="form-check-input me-2" />
+                            Bank Transfer
+                        </label>
+                        <label class="list-group-item">
+                            <input type="radio" name="paymentMethod" value="E-Wallet" class="form-check-input me-2" />
+                            E-Wallet
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100 mt-3">Pay now</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 p-4">
+                <h4 class="fw-bold mb-3">Order summary</h4>
+                <div class="d-flex justify-content-between small mb-2">
+                    <span>Ticket</span>
+                    <strong>@Model.Amount.ToString("N0")₫</strong>
+                </div>
+                <div class="d-flex justify-content-between small mb-2">
+                    <span>Fee</span>
+                    <strong>0₫</strong>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold">Total</span>
+                    <strong class="text-danger fs-5">@Model.Amount.ToString("N0")₫</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

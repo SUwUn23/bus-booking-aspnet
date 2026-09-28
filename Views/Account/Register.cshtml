@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4 text-center">Sign in</h3>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3 small">
+                        New user? <a asp-action="Register" asp-controller="Account">Register here</a>
+                    </div>
+                    <div class="alert alert-light border mt-3 mb-0 small">
+                        Demo admin: admin@busbooking.local / Admin123!<br />
+                        Demo customer: customer@busbooking.local / Customer123!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

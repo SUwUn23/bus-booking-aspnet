@@ -1,0 +1,84 @@
+@model BusBookingSystem.Models.Trip
+@{
+    ViewData["Title"] = "Trip Detail";
+}
+
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 p-4">
+                <h3 class="fw-bold mb-3">@Model.Route.FromCity → @Model.Route.ToCity</h3>
+                <p class="text-muted mb-4">@Model.BusName • @Model.LicensePlate • @Model.DepartureDate.ToString("dd/MM/yyyy")</p>
+
+                <div class="mb-4 text-center">
+                    <span class="badge bg-secondary px-3 py-2">Front of bus</span>
+                </div>
+
+                <div class="row row-cols-4 g-3">
+                    @foreach (var seat in Model.Seats.OrderBy(s => s.SeatCode))
+                    {
+                        var cls = seat.IsBooked ? "bg-secondary text-white" : "bg-success text-white";
+                        <button type="button" class="btn @cls seat-btn" data-seat="@seat.SeatCode" @(seat.IsBooked ? "disabled" : "")>
+                            @seat.SeatCode
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 p-4">
+                <h4 class="fw-bold mb-3">Passenger info</h4>
+                <form method="post" asp-controller="Booking" asp-action="CreateBooking">
+                    <input type="hidden" name="tripId" value="@Model.Id" />
+                    <input type="hidden" name="seatCode" id="selectedSeat" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Full name</label>
+                        <input name="customerName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input name="phone" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input name="email" type="email" class="form-control" />
+                    </div>
+
+                    <div class="d-flex justify-content-between small mb-2">
+                        <span>Selected seat</span>
+                        <strong id="seatLabel">-</strong>
+                    </div>
+                    <div class="d-flex justify-content-between small mb-3">
+                        <span>Fare</span>
+                        <strong>@Model.Fare.ToString("N0")₫</strong>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100" onclick="return validateSeat();">Continue payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.seat-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.seat-btn').forEach(b => b.classList.remove('border','border-warning'));
+                this.classList.add('border','border-warning');
+                document.getElementById('selectedSeat').value = this.dataset.seat;
+                document.getElementById('seatLabel').textContent = this.dataset.seat;
+            });
+        });
+
+        function validateSeat() {
+            if (!document.getElementById('selectedSeat').value) {
+                alert('Please select a seat first.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

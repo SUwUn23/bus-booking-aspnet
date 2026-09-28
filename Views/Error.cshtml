@@ -1,0 +1,31 @@
+@model IEnumerable<BusBookingSystem.Models.Booking>
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">Bookings</h2>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Customer</th>
+                <th>Route</th>
+                <th>Seat</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.BookingCode</td>
+                    <td>@booking.CustomerName</td>
+                    <td>@booking.Trip.Route.FromCity → @booking.Trip.Route.ToCity</td>
+                    <td>@booking.SeatCode</td>
+                    <td>@booking.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

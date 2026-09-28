@@ -1,0 +1,108 @@
+@model IEnumerable<BusBookingSystem.Models.Trip>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-section text-white py-5" style="background: linear-gradient(rgba(10,17,40,.9), rgba(10,17,40,.9)), url('https://images.unsplash.com/photo-1544620347-c4a4a17ec29b?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; min-height: 700px;">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <p class="text-uppercase small text-light mb-3">Bhavnagar to Ahmedabad • 35 years on the road</p>
+                <h1 class="display-4 fw-bold mb-4">Bhavnagar to <span class="text-warning">Ahmedabad,</span><br/>every hour, all day.</h1>
+                <p class="lead text-light mb-4">Fifteen AC departures a day, seats from ₹362, boarding at thirteen points across the city.</p>
+
+                <form asp-action="Search" asp-controller="Home" method="post" class="card p-4 shadow-lg">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label small text-dark">From</label>
+                            <select name="FromCity" class="form-select" required>
+                                <option value="">Select</option>
+                                <option>Hà Nội</option>
+                                <option>Đà Nẵng</option>
+                                <option>TP. Hồ Chí Minh</option>
+                                <option>Cần Thơ</option>
+                                <option>Hải Phòng</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small text-dark">To</label>
+                            <select name="ToCity" class="form-select" required>
+                                <option value="">Select</option>
+                                <option>Hà Nội</option>
+                                <option>Đà Nẵng</option>
+                                <option>TP. Hồ Chí Minh</option>
+                                <option>Cần Thơ</option>
+                                <option>Hải Phòng</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small text-dark">Travel Date</label>
+                            <input type="date" name="TravelDate" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">Find buses</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <img src="https://images.unsplash.com/photo-1544620347-c4a4a17ec29b?auto=format&fit=crop&w=900&q=80" class="img-fluid rounded-4 shadow-lg" alt="Bus" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Next departures</h2>
+        <a href="#" class="text-danger text-decoration-none fw-semibold">All 15 buses →</a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive shadow-sm rounded overflow-hidden">
+            <table class="table table-light table-striped mb-0 align-middle">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Departs</th>
+                        <th>Arrives</th>
+                        <th>Seats</th>
+                        <th>Fare</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var trip in Model)
+                    {
+                        var seatCount = trip.Seats.Count(s => !s.IsBooked);
+                        <tr>
+                            <td>
+                                <div class="fw-bold">@trip.DepartureTime</div>
+                                <small class="text-muted">@trip.Route.FromCity</small>
+                            </td>
+                            <td>
+                                <div class="fw-bold">@trip.ArrivalTime</div>
+                                <small class="text-muted">@trip.Route.ToCity</small>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-danger">@seatCount</div>
+                                <small class="text-muted">Seats left</small>
+                            </td>
+                            <td>
+                                <div class="fw-bold">@trip.Fare.ToString("N0")₫</div>
+                                <small class="text-muted">Starting fare</small>
+                            </td>
+                            <td class="text-end">
+                                <a asp-controller="Booking" asp-action="TripDetail" asp-route-id="@trip.Id" class="btn btn-danger">Book</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">No trips found for the selected route.</div>
+    }
+</div>

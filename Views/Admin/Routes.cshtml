@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">Admin Dashboard</h2>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Total revenue</div>
+                    <div class="display-6 fw-bold text-danger">@ViewBag.TotalRevenue.ToString("N0")₫</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Total trips</div>
+                    <div class="display-6 fw-bold text-primary">@ViewBag.TotalTrips</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Total bookings</div>
+                    <div class="display-6 fw-bold text-success">@ViewBag.TotalBookings</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="small text-muted">Routes</div>
+                    <div class="display-6 fw-bold text-warning">@BusBookingSystem.Data.AppDbContext.CountRoutes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mt-4">
+        <div class="card-header bg-white fw-bold">Recent bookings</div>
+        <div class="card-body p-0">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Customer</th>
+                        <th>Route</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in (IEnumerable<BusBookingSystem.Models.Booking>)ViewBag.RecentBookings)
+                    {
+                        <tr>
+                            <td>@booking.BookingCode</td>
+                            <td>@booking.CustomerName</td>
+                            <td>@booking.Trip.Route.FromCity → @booking.Trip.Route.ToCity</td>
+                            <td>@booking.Amount.ToString("N0")₫</td>
+                            <td>@booking.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

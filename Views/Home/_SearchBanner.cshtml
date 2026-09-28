@@ -1,0 +1,62 @@
+@model IEnumerable<BusBookingSystem.Models.Trip>
+@{
+    ViewData["Title"] = "Home";
+}
+
+@await Html.PartialAsync("_SearchBanner")
+
+<div class="container py-5">
+    @if (ViewBag.SearchModel != null)
+    {
+        var search = (BusBookingSystem.Models.SearchViewModel)ViewBag.SearchModel;
+        <h3 class="mb-3">Search results: @search.FromCity → @search.ToCity</h3>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive shadow-sm rounded overflow-hidden">
+            <table class="table table-light table-striped align-middle mb-0">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Departs</th>
+                        <th>Arrives</th>
+                        <th>Seats</th>
+                        <th>Fare</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var trip in Model)
+                    {
+                        var seatsLeft = trip.Seats.Count(s => !s.IsBooked);
+                        <tr>
+                            <td>
+                                <div class="fw-bold">@trip.DepartureTime</div>
+                                <small class="text-muted">@trip.Route.FromCity</small>
+                            </td>
+                            <td>
+                                <div class="fw-bold">@trip.ArrivalTime</div>
+                                <small class="text-muted">@trip.Route.ToCity</small>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-danger">@seatsLeft</div>
+                                <small class="text-muted">Seats left</small>
+                            </td>
+                            <td>
+                                <div class="fw-bold">@trip.Fare.ToString("N0")₫</div>
+                                <small class="text-muted">Starting fare</small>
+                            </td>
+                            <td class="text-end">
+                                <a asp-controller="Booking" asp-action="TripDetail" asp-route-id="@trip.Id" class="btn btn-danger">Book</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info mt-3">No trips found.</div>
+    }
+</div>
